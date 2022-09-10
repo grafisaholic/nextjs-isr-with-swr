@@ -4,7 +4,7 @@ interface LayoutProps {
   children?: JSX.Element | JSX.Element[]
 }
 
-const layout: React.FC<LayoutProps> = ({children}) => {
+const Layout: React.FC<LayoutProps> = ({children}) => {
   return (
     <div className='flex flex-col max-w-2xl mx-auto min-h-screen'>
       <header className='flex flex-row justify-between items-center py-3 px-4 bg-slate-100'>
@@ -20,4 +20,4 @@ const layout: React.FC<LayoutProps> = ({children}) => {
   )
 }
 
-export default layout
+export default Layout

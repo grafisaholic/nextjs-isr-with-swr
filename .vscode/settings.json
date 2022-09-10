@@ -8,6 +8,7 @@
   "files.encoding": "utf8",
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "search.exclude": {
     "out/**": true,
     ".next/**": true,

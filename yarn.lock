@@ -222,7 +222,7 @@
     semver "^7.3.7"
     tsutils "^3.21.0"
 
-"@typescript-eslint/parser@^5.21.0":
+"@typescript-eslint/parser@^5.21.0", "@typescript-eslint/parser@^5.36.2":
   version "5.36.2"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-5.36.2.tgz#3ddf323d3ac85a25295a55fcb9c7a49ab4680ddd"
   integrity sha512-qS/Kb0yzy8sR0idFspI9Z6+t7mqk/oRjnAYfewG+VN73opAUvmYL3oPIMmgOX6CnQS6gmVIXGshlb5RY/R22pA==
@@ -1744,6 +1744,11 @@ react-dom@18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-hook-form@^7.35.0:
+  version "7.35.0"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.35.0.tgz#b133de48fc84b1e62f9277ba79dfbacd9bb13dd3"
+  integrity sha512-9CYdOed+Itbiu5VMVxW0PK9mBR3f0gDGJcZEyUSm0eJbDymQ913TRs2gHcQZZmfTC+rtxyDFRuelMxx/+xwMcw==
 
 react-is@^16.13.1:
   version "16.13.1"
