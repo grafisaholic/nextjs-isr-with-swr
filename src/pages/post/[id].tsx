@@ -1,6 +1,7 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps, InferGetServerSidePropsType } from 'next';
 import { ParsedUrlQuery } from 'querystring';
+import Link from 'next/link';
 
 import { getAllPosts, getPost } from '~/libs/db';
 
@@ -19,9 +20,11 @@ const PostPage = ({ id, fallbackData }: InferGetServerSidePropsType<typeof getSt
   return (
     <Layout>
       <div className="pt-8 pb-4 px-4 flex flex-col space-y-4">
-        <button className="bg-white py-2 px-3 border self-end border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Edit
-        </button>
+        <Link href={`/post/edit/${post.id}`} passHref>
+          <button className="bg-white py-2 px-3 border self-end border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Edit
+          </button>
+        </Link>
         <h3 className="font-bold text-3xl mt-4">{post.title}</h3>
       </div>
 

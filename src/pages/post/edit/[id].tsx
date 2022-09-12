@@ -2,7 +2,8 @@ import React from 'react';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import Link from 'next/link';
 
 import { getAllPosts, getPost, Post } from '~/libs/db';
 import { UsePost } from '~/hooks/use-post';
@@ -21,24 +22,50 @@ function PostEditPage({ id, fallbackData }: InferGetStaticPropsType<typeof getSt
   });
   const { mutate: mutateAllPost } = UseAllPosts();
 
-  const post = (!isLoading && !data?.post) || {};
+  const post: any = (!isLoading && data?.post) || {};
+  const form = useForm<FormInput>({ defaultValues: post });
 
-  const { register } = useForm<FormInput>({ defaultValues: post });
+  const handleSubmit: SubmitHandler<FormInput> = payload => {
+    const updatePost = {
+      ...post,
+      ...payload,
+    };
+
+    // MUTATE DETAIL PAGE
+    mutate(
+      {
+        post: updatePost,
+      },
+      false
+    );
+
+    // MUTATE ALL POST
+    mutateAllPost(prevData => {
+      const updatePosts = prevData?.posts?.map(postPrev =>
+        postPrev.id === id ? updatePost : postPrev
+      );
+
+      return {
+        posts: updatePosts,
+      };
+    }, false);
+
+    router.push(`/post/${post.id}`);
+  };
 
   return (
     <Layout>
-      <div className="pt-8 pb-4">
-        <h3 className="text-[25px] font-bold">Edit : Maecenas efficitur nec augue non maximus</h3>
+      <div className="pt-8 pb-4 px-4 ">
+        <h3 className="text-[25px] font-bold">Edit : {post.title}</h3>
       </div>
 
-      <div>
-        <form className="space-y-4 mt-2">
+      <div className="px-4">
+        <form className="space-y-4 mt-2" onSubmit={form.handleSubmit(handleSubmit)}>
           <label htmlFor="title" className="block">
             <span className="block font-medium text-gray-700">Title</span>
             <input
-              name="title"
-              ref={() => register({ name: 'title' })}
               type="text"
+              {...form.register('title')}
               className="px-3 py-2 rounded-md border border-gray-300 w-full mt-2 outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 block sm:text-sm"
             />
           </label>
@@ -46,29 +73,32 @@ function PostEditPage({ id, fallbackData }: InferGetStaticPropsType<typeof getSt
           <label htmlFor="content" className="block">
             <span className="block font-medium text-gray-700">Content</span>
             <textarea
-              name=""
               id=""
               cols={30}
-              rows={6}
+              rows={10}
+              {...form.register('content')}
               className="px-3 py-2 rounded-md border border-gray-300 w-full mt-2 outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 block sm:text-sm"></textarea>
           </label>
-        </form>
 
-        <div role="group" className="space-x-4 mt-4">
-          <button
-            className="border px-3 py-2 shadow-sm text-sm inline-flex justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2
-          ">
-            Cancle
-          </button>
-          <button
-            className="
+          <div role="group" className="space-x-4 mt-4">
+            <Link href={`/post/${post.id}`}>
+              <a
+                className="border px-3 py-2 shadow-sm text-sm inline-flex justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2
+            ">
+                Cancle
+              </a>
+            </Link>
+            <button
+              type="submit"
+              className="
           border px-3 py-2 shadow-sm text-sm inline-flex justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gray-800 text-white">
-            Save Changes
-          </button>
-        </div>
+              Save Changes
+            </button>
+          </div>
+        </form>
       </div>
 
-      <p className="text-sm mt-6 max-w-sm text-gray-600">
+      <p className="text-sm mt-6 max-w-sm text-gray-600 px-4">
         Any changes made to content will be saved to the cache, whilst static pages (this post and
         the "Home" page) revalidate in the background.
         <small className="block mt-1">(in this example, content is only saved to the cache)</small>
@@ -109,8 +139,10 @@ export const getStaticProps: GetStaticProps = async ctx => {
 
   return {
     props: {
-      id: id,
-      fallbackData: post,
+      id: post.id,
+      fallbackData: {
+        post,
+      },
     },
     revalidate: 1,
   };
